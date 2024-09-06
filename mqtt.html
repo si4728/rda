@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>HTML MQTT Example</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var MQTTbroker = '172.30.1.4'; // Replace with your MQTT broker address
+        var MQTTport = 1883; // #9004; // Replace with your MQTT broker port
+        var MQTTsubTopic = 'rda/#' //'meriat/ekstrah';
+        var client = new Paho.MQTT.Client(MQTTbroker, MQTTport, "clientId_" + parseInt(Math.random() * 100, 10));
+
+        // set callback handlers
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+
+        // connect the client
+        client.connect({ onSuccess: onConnect });
+
+        // called when the client connects
+        function onConnect() {
+            console.log("Connected to MQTT broker");
+            client.subscribe(MQTTsubTopic);
+        }
+
+        // called when the client loses its connection
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost:" + responseObject.errorMessage);
+            }
+        }
+
+        // called when a message arrives
+        function onMessageArrived(message) {
+            console.log("onMessageArrived:" + message.payloadString);
+            var paragraph = document.getElementById("receivedMessage");
+            paragraph.innerHTML = message.payloadString;
+        }
+
+        // function to send a test message
+        function sendTestMessage() {
+            var messageText = document.getElementById("messageInput").value;
+            var message = new Paho.MQTT.Message(messageText);
+            message.destinationName = MQTTsubTopic;
+            client.send(message);
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Remote Query</h2>
+    <p id="receivedMessage">Waiting for messages...</p>
+    <input type="text" id="messageInput" placeholder="Type a query" size="50">
+    <button onclick="sendTestMessage()">Execute</button>
+</body>
+
+</html>
