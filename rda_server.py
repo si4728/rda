@@ -8,7 +8,7 @@ import json
 my_instance = MyClass(parameter1_value, parameter2_value)
 
 # MQTT Broker 정보
-broker_address = "localhost"
+broker_address = "113.192.105.213"
 broker_port = 1883
 
 # Subscribe Topic
