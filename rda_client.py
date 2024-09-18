@@ -4,7 +4,7 @@ import time
 import json
 
 # MQTT Broker info
-broker_address = "192.168.219.177"
+broker_address = "113.192.105.213" 
 broker_port = 1883
 
 #Topic
